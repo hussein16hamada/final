@@ -1,1 +1,1 @@
-web: ./build/install/com.example.note-server/bin/com.example.note-server
+web: java -jar build/libs/example.note-server-0.0.1-all.jar
