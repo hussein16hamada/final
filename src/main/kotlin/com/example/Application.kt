@@ -22,7 +22,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 
 fun main() {
-    embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
+    embeddedServer(Netty, port = System.getenv("PORT").toInt() ,host = "0.0.0.0") {
         DatabaseFactory.init()
         val db = Repo()
         val jwtService = JwtService()
