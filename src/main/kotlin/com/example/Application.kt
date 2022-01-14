@@ -27,7 +27,7 @@ fun main() {
         val db = Repo()
         val jwtService = JwtService()
         val hashFunction = { s:String -> hash(s) }
-        configureSecurity()
+//        configureSecurity()
         configureRouting()
         install(Authentication) {
             jwt("jwt") {
