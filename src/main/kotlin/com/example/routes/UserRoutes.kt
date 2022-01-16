@@ -57,7 +57,7 @@ fun Route.UserRoutes(
         val loginRequest = try {
             call.receive<LoginRequest>()
         } catch (e:Exception){
-            call.respond(HttpStatusCode.BadRequest,SimpleResponse(false,"Missing Some Fields"))
+            call.respond(HttpStatusCode.BadRequest,SimpleResponse(false,"Missing Some Fields"+e))
             return@post
         }
 
