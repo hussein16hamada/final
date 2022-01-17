@@ -3,12 +3,10 @@ package com.example.routes
 
 
 import com.example.Auth.JwtService
-import com.example.Data.Model.LoginRequest
-import com.example.Data.Model.RegisterRequest
-import com.example.Data.Model.SimpleResponse
-import com.example.Data.Model.User
+import com.example.Data.Model.*
 import com.example.Rebository.Repo
 import io.ktor.application.*
+import io.ktor.auth.*
 import io.ktor.http.*
 import io.ktor.locations.*
 import io.ktor.locations.post
@@ -28,12 +26,28 @@ class UserRegisterRoute
 @Location(LOGIN_REQUEST)
 class UserLoginRoute
 
+@Location(USERS)
+class Users
 
 fun Route.UserRoutes(
     db: Repo,
     jwtService: JwtService,
     hashFunction: (String)->String
 ){
+
+    get<Users> {
+
+        try {
+//            val email = call.principal<User>()!!.email
+            val users = db.getAllUsers()
+            call.respond(HttpStatusCode.OK, users)
+
+        } catch (e: Exception) {
+
+            call.respond(HttpStatusCode.Conflict, emptyList<User>())
+        }
+    }
+
 
     post<UserRegisterRoute> {
         val registerRequest = try {

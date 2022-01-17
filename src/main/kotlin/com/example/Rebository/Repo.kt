@@ -40,6 +40,11 @@ class Repo {
         )
     }
 
+    suspend fun getAllUsers():List<User> = dbQuery {
+
+        UserTable.selectAll().mapNotNull { rowToUser(it) }
+
+    }
 
     //    ============== NOTES ==============
 
