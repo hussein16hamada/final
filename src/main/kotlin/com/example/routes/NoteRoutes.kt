@@ -7,6 +7,8 @@ import io.ktor.auth.*
 import io.ktor.http.*
 import io.ktor.locations.*
 import io.ktor.locations.post
+import io.ktor.locations.put
+
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
@@ -75,15 +77,14 @@ fun Route.NoteRoutes(
         }
 
 
-
-        post<NoteUpdateRoute> {
+        put<NoteUpdateRoute> {
             val id =call.parameters["id"]?.toInt() ?: -1
 
             val note = try {
                 call.receive<NoteResponse>()
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.BadRequest, SimpleResponse(false, "Missing Fields"))
-                return@post
+                return@put
             }
 
             try {
