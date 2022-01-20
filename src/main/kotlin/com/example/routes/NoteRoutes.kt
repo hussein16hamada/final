@@ -72,7 +72,7 @@ fun Route.NoteRoutes(
 
             } catch (e: Exception) {
 
-                call.respond(HttpStatusCode.Conflict , emptyList<Note>() +e.localizedMessage)
+                call.respond(HttpStatusCode.Conflict , emptyList<Note>() +e.message)
             }
         }
 
