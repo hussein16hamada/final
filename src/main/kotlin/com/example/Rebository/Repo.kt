@@ -58,6 +58,8 @@ class Repo {
                 nt[NoteTable.noteTitle] = note.noteTitle
                 nt[NoteTable.description] = note.description
                 nt[NoteTable.date] = note.date
+                nt[NoteTable.isOnline] = note.isOnline
+
             }
 
         }
@@ -87,6 +89,8 @@ class Repo {
                 nt[NoteTable.noteTitle] = note.noteTitle
                 nt[NoteTable.description] = note.description
                 nt[NoteTable.date] = note.date
+                nt[NoteTable.isOnline] = note.isOnline
+
             }
 
         }
@@ -110,7 +114,8 @@ class Repo {
             id = row[NoteTable.id],
             noteTitle = row[NoteTable.noteTitle],
             description =  row[NoteTable.description],
-            date = row[NoteTable.date]
+            date = row[NoteTable.date],
+            isOnline = row[NoteTable.isOnline]
         )
 
     }
