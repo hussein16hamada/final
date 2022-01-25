@@ -12,9 +12,9 @@ import org.jetbrains.exposed.sql.*
 
 class Repo {
 
-    suspend fun addUser(user:User){
-        dbQuery{
-            UserTable.insert { ut->
+    suspend fun addUser(user: User) {
+        dbQuery {
+            UserTable.insert { ut ->
                 ut[UserTable.email] = user.email
                 ut[UserTable.hashPassword] = user.hashPassword
                 ut[UserTable.name] = user.userName
@@ -22,25 +22,25 @@ class Repo {
         }
     }
 
-    suspend fun findUserByEmail(email:String) = dbQuery {
+    suspend fun findUserByEmail(email: String) = dbQuery {
         UserTable.select { UserTable.email.eq(email) }
             .map { rowToUser(it) }
             .singleOrNull()
     }
 
-    private fun rowToUser(row:ResultRow?):User?{
-        if(row == null){
+    private fun rowToUser(row: ResultRow?): User? {
+        if (row == null) {
             return null
         }
 
         return User(
-            email =  row[UserTable.email],
+            email = row[UserTable.email],
             hashPassword = row[UserTable.hashPassword],
             userName = row[UserTable.name]
         )
     }
 
-    suspend fun getAllUsers():List<User> = dbQuery {
+    suspend fun getAllUsers(): List<User> = dbQuery {
 
         UserTable.selectAll().mapNotNull { rowToUser(it) }
 
@@ -49,13 +49,13 @@ class Repo {
     //    ============== NOTES ==============
 
 
-    suspend fun addNote(note:NoteRequest,email: String){
+    suspend fun addNote(note: NoteRequest, email: String) {
         dbQuery {
 
-            NoteTable.insert { nt->
+            NoteTable.insert { nt ->
 //                nt[NoteTable.id] = note.id
                 nt[NoteTable.userEmail] = email
-                nt[NoteTable.noteTitle] = note.noteTitle
+                nt[NoteTable.noteTitle] = note.noteTitle +NoteTable.id
                 nt[NoteTable.description] = note.description
                 nt[NoteTable.date] = note.date
                 nt[NoteTable.isOnline] = note.isOnline
@@ -67,7 +67,7 @@ class Repo {
     }
 
 
-    suspend fun getAllNotes(email:String):List<NoteResponse> = dbQuery {
+    suspend fun getAllNotes(email: String): List<NoteResponse> = dbQuery {
 
         NoteTable.select {
             NoteTable.userEmail.eq(email)
@@ -76,7 +76,7 @@ class Repo {
     }
 
 
-    suspend fun updateNote(note:NoteResponse,email: String,id :Int){
+    suspend fun updateNote(note: NoteResponse, email: String, id: Int) {
 
         dbQuery {
 
@@ -84,7 +84,7 @@ class Repo {
                 where = {
                     NoteTable.userEmail.eq(email) and NoteTable.id.eq(id)
                 }
-            ){ nt->
+            ) { nt ->
                 nt[NoteTable.id] = note.id
                 nt[NoteTable.noteTitle] = note.noteTitle
                 nt[NoteTable.description] = note.description
@@ -96,24 +96,25 @@ class Repo {
         }
 
     }
-//
-    suspend fun deleteNote(id:Int,email: String){
+
+    //
+    suspend fun deleteNote(id: Int, email: String) {
         dbQuery {
-            NoteTable.deleteWhere {NoteTable.userEmail.eq(email)and  NoteTable.id.eq(id) }
+            NoteTable.deleteWhere { NoteTable.userEmail.eq(email) and NoteTable.id.eq(id) }
         }
     }
 
 
-    private fun rowToNote(row:ResultRow?): NoteResponse? {
+    private fun rowToNote(row: ResultRow?): NoteResponse? {
 
-        if(row == null){
+        if (row == null) {
             return null
         }
 
         return NoteResponse(
             id = row[NoteTable.id],
             noteTitle = row[NoteTable.noteTitle],
-            description =  row[NoteTable.description],
+            description = row[NoteTable.description],
             date = row[NoteTable.date],
             isOnline = row[NoteTable.isOnline]
         )
