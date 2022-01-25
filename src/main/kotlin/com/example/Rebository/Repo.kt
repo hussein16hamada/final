@@ -50,12 +50,13 @@ class Repo {
 
 
     suspend fun addNote(note: NoteRequest, email: String) {
+        
         dbQuery {
 
             NoteTable.insert { nt ->
 //                nt[NoteTable.id] = note.id
                 nt[NoteTable.userEmail] = email
-                nt[NoteTable.noteTitle] = note.noteTitle +NoteTable.id
+                nt[NoteTable.noteTitle] = note.noteTitle
                 nt[NoteTable.description] = note.description
                 nt[NoteTable.date] = note.date
                 nt[NoteTable.isOnline] = note.isOnline
