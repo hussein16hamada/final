@@ -78,7 +78,7 @@ class Repo {
                    }
                }
 
-               return@transaction id.value
+               return@transaction id
            }
 
        }catch (e:Exception){
@@ -133,7 +133,7 @@ class Repo {
         }
 
         return NoteResponse(
-            id = row[NoteTable.id].toString().toInt(),
+            id = row[NoteTable.id],
             noteTitle = row[NoteTable.noteTitle],
             description = row[NoteTable.description],
             date = row[NoteTable.date],
