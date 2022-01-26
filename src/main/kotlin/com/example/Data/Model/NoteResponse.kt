@@ -4,7 +4,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 
 
 data class NoteResponse(
-    val id: EntityID<Int>,
+    val id: Int,
     val noteTitle:String,
     val description:String,
     val date:Long,
