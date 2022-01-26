@@ -8,7 +8,11 @@ import com.example.Data.Table.NoteTable
 import com.example.Data.Table.UserTable
 import com.example.Rebository.DatabaseFactory.dbQuery
 import io.ktor.application.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.transactions.transaction
 
 class Repo {
 
@@ -49,21 +53,32 @@ class Repo {
     //    ============== NOTES ==============
 
 
-    suspend fun addNote(note: NoteRequest, email: String) {
-        
-        dbQuery {
+    suspend fun addNote(note: NoteRequest, email: String) :Int{
+       try {
+           return transaction {
+              runBlocking {
+                  dbQuery {
 
-            NoteTable.insert { nt ->
+                      val  i =  NoteTable.insert { nt ->
 //                nt[NoteTable.id] = note.id
-                nt[NoteTable.userEmail] = email
-                nt[NoteTable.noteTitle] = note.noteTitle
-                nt[NoteTable.description] = note.description
-                nt[NoteTable.date] = note.date
-                nt[NoteTable.isOnline] = note.isOnline
+                          nt[NoteTable.userEmail] = email
+                          nt[NoteTable.noteTitle] = note.noteTitle
+                          nt[NoteTable.description] = note.description
+                          nt[NoteTable.date] = note.date
+                          nt[NoteTable.isOnline] = note.isOnline
 
-            }
+                      }
 
-        }
+                  }
+
+              }
+
+               return@transaction id.toInt()
+           }
+
+       }catch (e:Exception){
+           return -1
+       }
 
     }
 
