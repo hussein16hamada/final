@@ -6,12 +6,12 @@ import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.booleanParam
 
-object NoteTable:Table() {
+object NoteTable:IdTable<Int>() {
 
 //    val id = varchar("id",512)
-//override val id: Column<EntityID<Int>> = integer("id").entityId().autoIncrement()
+override val id: Column<EntityID<Int>> = integer("id").entityId().autoIncrement()
 
-    val id = integer("id").autoIncrement()
+//    val id = integer("id").autoIncrement()
     val userEmail = varchar("userEmail",512).references(UserTable.email)
     val noteTitle = text("noteTitle")
     val description = text("description")
