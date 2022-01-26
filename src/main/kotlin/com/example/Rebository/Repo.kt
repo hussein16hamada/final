@@ -11,7 +11,9 @@ import io.ktor.application.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class Repo {
@@ -53,27 +55,30 @@ class Repo {
     //    ============== NOTES ==============
 
 
-    suspend fun addNote(note: NoteRequest, email: String) :Int{
+    suspend fun addNote(note: NoteRequest, email: String) : Int {
        try {
            return transaction {
-              runBlocking {
-                  dbQuery {
-
-                      val  i =  NoteTable.insert { nt ->
+               val  id =  NoteTable.insert { nt ->
 //                nt[NoteTable.id] = note.id
-                          nt[NoteTable.userEmail] = email
-                          nt[NoteTable.noteTitle] = note.noteTitle
-                          nt[NoteTable.description] = note.description
-                          nt[NoteTable.date] = note.date
-                          nt[NoteTable.isOnline] = note.isOnline
+                   nt[NoteTable.userEmail] = email
+                   nt[NoteTable.noteTitle] = note.noteTitle
+                   nt[NoteTable.description] = note.description
+                   nt[NoteTable.date] = note.date
+                   nt[NoteTable.isOnline] = note.isOnline
 
-                      }
+               } get NoteTable.id
 
-                  }
+               transaction {
+                   NoteTable.update ({ NoteTable.id eq id }){ nt->
+                       nt[NoteTable.userEmail] = email
+                       nt[NoteTable.noteTitle] = note.noteTitle
+                       nt[NoteTable.description] = note.description
+                       nt[NoteTable.date] = note.date
+                       nt[NoteTable.isOnline] = note.isOnline
+                   }
+               }
 
-              }
-
-               return@transaction id.toInt()
+               return@transaction id.value
            }
 
        }catch (e:Exception){
