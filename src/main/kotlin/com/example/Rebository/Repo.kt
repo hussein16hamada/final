@@ -78,7 +78,7 @@ class Repo {
                    }
                }
 
-               return@transaction id.value
+               return@transaction id
            }
 
        }catch (e:Exception){
