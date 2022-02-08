@@ -17,6 +17,7 @@ const val NOTES = "$API_VERSION/notes"
 const val CREATE_NOTES = "$NOTES/create"
 const val UPDATE_NOTES = "$NOTES/update"
 const val DELETE_NOTES = "$NOTES/delete"
+const val DELETE_ALL_NOTES = "$NOTES/deleteAll"
 
 @Location(CREATE_NOTES)
 class NoteCreateRoute
@@ -30,7 +31,8 @@ class NoteUpdateRoute
 @Location(DELETE_NOTES)
 class NoteDeleteRoute
 
-
+@Location(DELETE_ALL_NOTES)
+class NoteDeleteAllRoute
 
 
 fun Route.NoteRoutes(
@@ -122,6 +124,37 @@ fun Route.NoteRoutes(
             }
 
         }
+
+
+
+//        try {
+//            val email = call.principal<User>()!!.email
+//            val notes = db.getAllNotes(email)
+//            call.respond(HttpStatusCode.OK, notes)
+//
+//        } catch (e: Exception) {
+//
+//            call.respond(HttpStatusCode.Conflict , emptyList<Note>() +e.message +"sasasasa")
+//
+//        }
+
+        delete<NoteDeleteAllRoute> {
+
+
+        try {
+            val email = call.principal<User>()!!.email
+             db.deleteAllNotes(email)
+            call.respond(HttpStatusCode.OK, SimpleResponse(true, "Note Deleted Successfully!"))
+
+        } catch (e: Exception) {
+
+            call.respond(HttpStatusCode.Conflict, SimpleResponse(false, e.message ?: "Some problem Occurred!"))
+
+        }
+
+
+        }
+
 
     }
 }

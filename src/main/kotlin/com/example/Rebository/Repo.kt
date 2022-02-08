@@ -142,4 +142,10 @@ class Repo {
 
     }
 
+    suspend fun deleteAllNotes( email: String) {
+        dbQuery {
+            NoteTable.deleteWhere { NoteTable.userEmail.eq(email)}
+        }
+    }
+
 }
