@@ -55,7 +55,8 @@ fun Route.NoteRoutes(
 
                 val email = call.principal<User>()!!.email
                val id = db.addNote(note, email)
-                call.respond(HttpStatusCode.OK, SimpleResponse(true, "Note Added Successfully-${id}"))
+                call.respond(HttpStatusCode.OK,
+                    SimpleResponse(true, NoteResponse(id,note.noteTitle,note.description,note.date,note.isOnline)))
 
             } catch (e: Exception) {
 
